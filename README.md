@@ -64,9 +64,9 @@ LLM_MODEL=gemini-2.5-flash
 For Streamlit Cloud deployment, ensure all packages in `requirements.txt` are listed. The app will automatically install them and download the necessary local embedding models during the first run.
 
 ## 📸 Screenshots
-![Main Interface](image1.png)
-![Chat Interface](image2.png)
-![Action Center](image3.png)
+![Main Interface](screenshot1.png)
+![Chat Interface](screenshot2.png)
+![Action Center](screenshot3.png)
 
 ---
 *Created with ❤️ for intelligent document processing.*
