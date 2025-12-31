@@ -9,7 +9,6 @@ import pickle
 import google.generativeai as genai
 from typing import List, Dict, Any
 from dotenv import load_dotenv
-import asyncio
 import time
 
 load_dotenv()
@@ -59,23 +58,22 @@ class DocumentDB:
             separators=["\n\n", "\n", ".", "!", "?", " ", ""]
         )
 
-    async def _get_embedding(self, text: str) -> np.ndarray:
-        """Fetch embedding from local HuggingFace model."""
-        # Run in thread pool because it's CPU intensive
-        vector = await asyncio.to_thread(self.embeddings_model.embed_query, text)
+    def _get_embedding(self, text: str) -> np.ndarray:
+        """Fetch embedding from local HuggingFace model (synchronous)."""
+        vector = self.embeddings_model.embed_query(text)
         embedding = np.array(vector, dtype='float32')
         faiss.normalize_L2(embedding.reshape(1, -1))
         return embedding
 
-    async def _get_batch_embeddings(self, texts: List[str]) -> np.ndarray:
-        """Fetch multiple embeddings from local HuggingFace model."""
-        vectors = await asyncio.to_thread(self.embeddings_model.embed_documents, texts)
+    def _get_batch_embeddings(self, texts: List[str]) -> np.ndarray:
+        """Fetch multiple embeddings from local HuggingFace model (synchronous)."""
+        vectors = self.embeddings_model.embed_documents(texts)
         embeddings = np.array(vectors, dtype='float32')
         for i in range(len(embeddings)):
             faiss.normalize_L2(embeddings[i].reshape(1, -1))
         return embeddings
 
-    async def ingest_pdf(self, file_path: str, filename: str, batch_size: int = 32) -> Dict[str, Any]:
+    def ingest_pdf(self, file_path: str, filename: str, batch_size: int = 32) -> Dict[str, Any]:
         """Extracts text from PDF, chunks it, and stores in FAISS using local embeddings."""
         start_time = time.time()
         print(f"[*] Starting local ingestion for {filename}...")
@@ -109,7 +107,7 @@ class DocumentDB:
         for i, batch in enumerate(batches):
             batch_texts = [item["content"] for item in batch]
             try:
-                embeddings = await self._get_batch_embeddings(batch_texts)
+                embeddings = self._get_batch_embeddings(batch_texts)
                 start_idx = self.index.ntotal
                 self.index.add(embeddings)
                 for j, item in enumerate(batch):
@@ -127,9 +125,9 @@ class DocumentDB:
         doc.close()
         return {"file_id": file_id, "chunks_count": len(all_chunks_data)}
 
-    async def query_db(self, query: str, n_results: int = 5) -> List[Dict[str, Any]]:
-        """Performs a similarity search in FAISS."""
-        query_embedding = await self._get_embedding(query)
+    def query_db(self, query: str, n_results: int = 5) -> List[Dict[str, Any]]:
+        """Performs a similarity search in FAISS (synchronous)."""
+        query_embedding = self._get_embedding(query)
         distances, indices = self.index.search(query_embedding.reshape(1, -1), n_results)
         
         results = []

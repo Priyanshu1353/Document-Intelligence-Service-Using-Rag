@@ -14,8 +14,8 @@ if API_KEY and "your_key_here" not in API_KEY:
 
 MODEL_NAME = os.getenv("LLM_MODEL", "gemini-2.5-flash")
 
-async def run_extraction(text: str) -> List[ActionableItem]:
-    """Runs data extraction using Gemini with structured output."""
+def run_extraction(text: str) -> List[ActionableItem]:
+    """Runs data extraction using Gemini with structured output (synchronous)."""
     if not API_KEY or "your_key_here" in API_KEY:
         return []
 
@@ -47,8 +47,8 @@ async def run_extraction(text: str) -> List[ActionableItem]:
         print(f"Error parsing Gemini extraction: {e}")
         return []
 
-async def run_chat(query: str, context: str) -> str:
-    """Answers query based on provided context using Gemini."""
+def run_chat(query: str, context: str) -> str:
+    """Answers query based on provided context using Gemini (synchronous)."""
     if not API_KEY or "your_key_here" in API_KEY:
         return "Please set GEMINI_API_KEY in the .env file."
 

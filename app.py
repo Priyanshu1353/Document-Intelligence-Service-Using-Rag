@@ -1,7 +1,6 @@
 import streamlit as st
 import os
 import json
-import asyncio
 import tempfile
 from database import DocumentDB
 from agent import run_chat, run_extraction
@@ -31,12 +30,11 @@ with st.sidebar:
         if st.button("🚀 Ingest Document"):
             with st.spinner("Ingesting... (this may take a moment)"):
                 try:
-                    # Save uploaded file to a temp file for processing
                     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
                         tmp.write(uploaded_file.getvalue())
                         tmp_path = tmp.name
 
-                    result = asyncio.run(db.ingest_pdf(tmp_path, uploaded_file.name))
+                    result = db.ingest_pdf(tmp_path, uploaded_file.name)
                     os.remove(tmp_path)
 
                     st.success(f"✅ Ingested! ({result['chunks_count']} chunks)")
@@ -69,7 +67,7 @@ with tab1:
         with st.chat_message("assistant"):
             with st.spinner("Thinking..."):
                 try:
-                    relevant_chunks = asyncio.run(db.query_db(prompt, n_results=5))
+                    relevant_chunks = db.query_db(prompt, n_results=5)
                     context = "\n\n".join([r["content"] for r in relevant_chunks])
                     sources = list(set([r["metadata"]["filename"] for r in relevant_chunks]))
 
@@ -77,7 +75,7 @@ with tab1:
                         answer = "I have no knowledge about this yet. Please ingest some documents first."
                         sources = []
                     else:
-                        answer = asyncio.run(run_chat(prompt, context))
+                        answer = run_chat(prompt, context)
 
                     full_response = answer
                     if sources:
@@ -101,7 +99,7 @@ with tab2:
                     if not full_text:
                         st.error("No content found for this file.")
                     else:
-                        actions = asyncio.run(run_extraction(full_text))
+                        actions = run_extraction(full_text)
                         if not actions:
                             st.info("No actionable items found in this document.")
                         else:
@@ -115,6 +113,7 @@ with tab2:
                             )
                 except Exception as e:
                     st.error(f"Extraction failed: {str(e)}")
+
 
 
 
