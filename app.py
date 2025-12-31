@@ -1,5 +1,12 @@
-import streamlit as st
 import os
+import streamlit as st
+
+# Inject Streamlit secrets into environment variables (for Streamlit Cloud)
+# This must happen BEFORE importing database/agent which read env vars at load time
+for key in ["GEMINI_API_KEY", "LLM_MODEL"]:
+    if hasattr(st, "secrets") and key in st.secrets:
+        os.environ[key] = st.secrets[key]
+
 import json
 import tempfile
 from database import DocumentDB
