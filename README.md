@@ -2,8 +2,6 @@
 
 An AI-powered document analysis platform that enables users to **chat with their PDFs** and automatically **extract actionable items** (deadlines, meetings, payments) using RAG (Retrieval-Augmented Generation) and local vector embeddings.
 
-![Main Interface](image1.png)
-
 ## 🚀 Features
 
 - **Semantic Search**: Uses local HuggingFace embeddings (`all-MiniLM-L6-v2`) and FAISS for fast, reliable document retrieval.
@@ -11,8 +9,6 @@ An AI-powered document analysis platform that enables users to **chat with their
 - **Action Extraction**: Automatically identifies and categorizes tasks, deadlines, and financial items.
 - **Modern UI**: Clean, intuitive interface built with Streamlit.
 - **FastAPI Backend**: Robust asynchronous API for document processing.
-
-![Chat Interface](image2.png)
 
 ## 🛠️ Tech Stack
 
@@ -22,8 +18,6 @@ An AI-powered document analysis platform that enables users to **chat with their
 - **Vector Store**: FAISS
 - **Embeddings**: Sentence-Transformers (Local)
 - **PDF Processing**: PyMuPDF
-
-![Action Center](image3.png)
 
 ## 🏗️ Getting Started
 
@@ -68,6 +62,11 @@ LLM_MODEL=gemini-2.5-flash
 ## ☁️ Deployment on Streamlit Cloud
 
 For Streamlit Cloud deployment, ensure all packages in `requirements.txt` are listed. The app will automatically install them and download the necessary local embedding models during the first run.
+
+## 📸 Screenshots
+![Main Interface](image1.png)
+![Chat Interface](image2.png)
+![Action Center](image3.png)
 
 ---
 *Created with ❤️ for intelligent document processing.*
