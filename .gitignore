@@ -18,3 +18,11 @@ chroma_db/
 # OS
 .DS_Store
 Thumbs.db
+
+# Test and scratch files
+test_*.py
+create_sample_pdf.py
+sample_test.pdf
+*.txt
+apply_history.*
+list_models.py
